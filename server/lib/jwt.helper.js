@@ -15,7 +15,7 @@ class JWTHelper {
 			sameSite: 'none',
 		})
 	}
-	static async getToken(
+	static getToken(
 		req,
 		res,
 		name,
@@ -29,13 +29,13 @@ class JWTHelper {
 			SESSION_SECRET,
 			expire,
 			(err, decoded) => {
-				if (err) console.error(err)
+				if (err) throw err
 				else success(decoded)
 			}
 		)
 	}
-	static killToken(req, res) {
-		res.clearCookie('jwt_auth')
+	static killToken(req, res, name) {
+		res.clearCookie(name)
 	}
 }
 

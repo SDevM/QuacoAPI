@@ -22,7 +22,7 @@ router.get('', (req, res) => {
 })
 
 function logout(req, res) {
-	JWTHelper.killToken(req, res)
+	JWTHelper.killToken(req, res, 'jwt_auth')
 	JSONResponse.success(req, res, 200, 'Logged out successfully!')
 }
 
