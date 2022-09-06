@@ -1,14 +1,14 @@
 require('dotenv').config()
 const nodemailer = require('nodemailer')
 const JSONResponse = require('./json.helper')
-const { GMAIL, DOMAIN } = process.env
+const { GMAILU, GMAILP, DOMAIN } = process.env
 
 class Emailer {
 	transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
-			user: GMAIL.user,
-			pass: GMAIL.password,
+			user: GMAILU,
+			pass: GMAILP,
 		},
 	})
 
