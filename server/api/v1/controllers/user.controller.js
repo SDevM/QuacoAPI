@@ -172,34 +172,35 @@ class controller {
 				userModel
 					.findById(decoded.self)
 					.then((result) => {
-						result
-							.populate('title')
-							.then((result) => {
-								// let blob = new Blob([result.profile_pic], {
-								// 	type: 'image/*',
-								// })
-								let file_string = result.profile_pic.toString()
-								var f = new File([file_string], 'profile.jpg', {
-									type: 'image/*',
+						if (result)
+							result
+								.populate('title')
+								.then((result) => {
+									// let blob = new Blob([result.profile_pic], {
+									// 	type: 'image/*',
+									// })
+									let file_string = result.profile_pic.toString()
+									var f = new File([file_string], 'profile.jpg', {
+										type: 'image/*',
+									})
+									result.profile_pic = f
+									JSONResponse.success(
+										req,
+										res,
+										200,
+										'Session resumed.',
+										result
+									)
 								})
-								result.profile_pic = f
-								JSONResponse.success(
-									req,
-									res,
-									200,
-									'Session resumed.',
-									result
-								)
-							})
-							.catch((err) => {
-								JSONResponse.error(
-									req,
-									res,
-									500,
-									'Failure handling user model',
-									err
-								)
-							})
+								.catch((err) => {
+									JSONResponse.error(
+										req,
+										res,
+										500,
+										'Failure handling user model',
+										err
+									)
+								})
 					})
 					.catch((err) => {
 						JSONResponse.error(

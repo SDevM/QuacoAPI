@@ -103,10 +103,15 @@ class controller {
 								)
 							} else if (same) {
 								if (result.active) {
-									JWTHelper.setToken(req, res, {
-										type: 0,
-										self: result._id,
-									}, 'jwt_auth')
+									JWTHelper.setToken(
+										req,
+										res,
+										{
+											type: 0,
+											self: result._id,
+										},
+										'jwt_auth'
+									)
 									result
 										.populate(['title', 'work_shift'])
 										.then((result) => {
@@ -210,26 +215,27 @@ class controller {
 				driverModel
 					.findById(decoded.self)
 					.then((result) => {
-						result
-							.populate(['title', 'work_shift'])
-							.then((result) => {
-								JSONResponse.success(
-									req,
-									res,
-									200,
-									'Session resumed.',
-									result
-								)
-							})
-							.catch((err) => {
-								JSONResponse.error(
-									req,
-									res,
-									500,
-									'Failure handling user model',
-									err
-								)
-							})
+						if (result)
+							result
+								.populate(['title', 'work_shift'])
+								.then((result) => {
+									JSONResponse.success(
+										req,
+										res,
+										200,
+										'Session resumed.',
+										result
+									)
+								})
+								.catch((err) => {
+									JSONResponse.error(
+										req,
+										res,
+										500,
+										'Failure handling user model',
+										err
+									)
+								})
 					})
 					.catch((err) => {
 						JSONResponse.error(
