@@ -13,7 +13,7 @@ let driverSchema = new db.Schema({
 	operating_areas: { type: [String], required: true }, //Google places
 	trn: { type: String, required: true },
 	chartered: { type: Boolean, default: false, required: true },
-	profile_pic: { type: String, required: true }, //Multer
+	profile_pic: { type: { key: String, link: String }, required: true },
 	work_shift: { type: db.Types.ObjectId, ref: 'workshifts', required: true },
 })
 

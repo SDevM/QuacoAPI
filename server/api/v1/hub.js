@@ -52,7 +52,7 @@ router
 router
 	.route('/drivers')
 	.get(driverController.session)
-	.post(driverController.signUp)
+	.post(upload.single('profile_pic'), driverController.signUp)
 	.patch(typeCheck(['driver']), driverController.updateDriver)
 	.delete(typeCheck(['driver']), driverController.deleteDriver)
 

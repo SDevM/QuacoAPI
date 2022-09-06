@@ -3,6 +3,7 @@ const { AWS_BUCKET_REGION, AWS_ACCESS_ID, AWS_ACCESS_KEY, AWS_BUCKET } =
 	process.env
 const fs = require('fs')
 const S3 = require('aws-sdk/clients/s3')
+const { bufferToStream } = require('./converters.helper')
 const s3 = new S3({
 	region: AWS_BUCKET_REGION,
 	credentials: {
@@ -12,17 +13,34 @@ const s3 = new S3({
 })
 
 class S3Helper {
-	static upload(file) {
-		const fileStream = fs.createReadStream(file.path)
-
+	static upload(file, name) {
 		const uploadConf = {
 			Bucket: AWS_BUCKET,
-			Body: fileStream,
-			Key: file.filename,
+			Body: bufferToStream(file.buffer),
+			Key: name,
 		}
 
 		return new Promise((resolve, reject) => {
 			s3.upload(uploadConf)
+				.promise()
+				.then((data) => {
+					resolve(data)
+				})
+				.catch((err) => {
+					console.error(err)
+					resolve(null)
+				})
+		})
+	}
+
+	static delete() {
+		const deleteConf = {
+			Bucket: AWS_BUCKET,
+			Key: name,
+		}
+
+		return new Promise((resolve, reject) => {
+			s3.deleteObject(uploadConf)
 				.promise()
 				.then((data) => {
 					resolve(data)

@@ -35,8 +35,12 @@ class controller {
 	}
 
 	//Create
-	static signUp(req, res) {
+	static async signUp(req, res) {
 		let body = req.body
+		let now = Date.now().toString(16)
+		let manageupload = await S3Helper.upload(req.file, now)
+		if (manageupload)
+			body.profile_pic = { key: now, link: manageupload.Location }
 		hash(body.password, genSaltSync(12), null, (err, hash) => {
 			if (hash) {
 				body.password = hash
@@ -49,7 +53,7 @@ class controller {
 							let new_driver = new driverModel(body)
 							new_driver
 								.save()
-								.then((result) => Emailer.verifyEmail(result, res))
+								.then((result) => Emailer.verifyEmail(req, res, result))
 								.catch((err) => {
 									JSONResponse.error(
 										req,

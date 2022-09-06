@@ -38,7 +38,7 @@ class Emailer {
 	 * Sends a verification email to the alleged email of the user.
 	 * @param {*} user - A new, inactive user
 	 */
-	verifyEmail(user, res) {
+	verifyEmail(req, res, user) {
 		let mailOptions = {
 			to: user.email,
 			from: GMAIL.user,
@@ -52,7 +52,6 @@ class Emailer {
 				user.delete()
 				JSONResponse.error(
 					req,
-					req,
 					res,
 					404,
 					'Failed to send verification email, deleting inactive account!',
@@ -62,7 +61,6 @@ class Emailer {
 				console.log('Email sent: ' + info.response)
 				user.save()
 				JSONResponse.success(
-					req,
 					req,
 					res,
 					200,

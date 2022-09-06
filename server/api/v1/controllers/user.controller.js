@@ -37,8 +37,10 @@ class controller {
 	//Create
 	static async signUp(req, res) {
 		let body = req.body
-		let manageupload = await S3Helper.upload(req.file)
-		if (manageupload) body.profile_pic = manageupload.Location
+		let now = Date.now().toString(16)
+		let manageupload = await S3Helper.upload(req.file, now)
+		if (manageupload)
+			body.profile_pic = { key: now, link: manageupload.Location }
 		hash(body.password, genSaltSync(12), null, (err, hash) => {
 			if (hash) {
 				body.password = hash
@@ -53,13 +55,7 @@ class controller {
 							new_user
 								.save()
 								.then((result) => {
-									Emailer.verifyEmail(result, res)
-									JSONResponse.success(
-										req,
-										res,
-										201,
-										'Account created!'
-									)
+									Emailer.verifyEmail(req, res, result)
 								})
 								.catch((err) => {
 									new_user.delete()
