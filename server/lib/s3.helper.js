@@ -1,7 +1,6 @@
 require('dotenv').config()
 const { AWS_BUCKET_REGION, AWS_ACCESS_ID, AWS_ACCESS_KEY, AWS_BUCKET } =
 	process.env
-const fs = require('fs')
 const S3 = require('aws-sdk/clients/s3')
 const { bufferToStream } = require('./converters.helper')
 const s3 = new S3({
@@ -33,14 +32,33 @@ class S3Helper {
 		})
 	}
 
-	static delete() {
+	static delete(name) {
 		const deleteConf = {
 			Bucket: AWS_BUCKET,
 			Key: name,
 		}
 
 		return new Promise((resolve, reject) => {
-			s3.deleteObject(uploadConf)
+			s3.deleteObject(deleteConf)
+				.promise()
+				.then((data) => {
+					resolve(data)
+				})
+				.catch((err) => {
+					console.error(err)
+					resolve(null)
+				})
+		})
+	}
+
+	static download(name) {
+		const downConf = {
+			Bucket: AWS_BUCKET,
+			Key: name,
+		}
+
+		return new Promise((resolve, reject) => {
+			s3.getObject(downConf)
 				.promise()
 				.then((data) => {
 					resolve(data)
