@@ -105,8 +105,8 @@ class controller {
 
 	static respondCharter(req, res) {
 		let did = req.session._id
-		let driver = req.session.self
 		let body = req.body
+		let driver = body.self
 		function recursive() {
 			if (
 				!req.session.self.chartered &&
@@ -302,7 +302,7 @@ class controller {
 			)
 				setTimeout(() => {
 					if (req.session) recursive()
-				}, 1000 * 60 * CHARTERCOOL)
+				}, 1000 * 60 * parseInt(CHARTERCOOL))
 			else {
 				workshiftlogModel
 					.findById(req.session.self.work_shift)
