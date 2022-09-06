@@ -3,6 +3,8 @@ const { hash, compare, genSaltSync } = require('bcrypt-nodejs')
 const JSONResponse = require('../../../lib/json.helper')
 const Emailer = require('../../../lib/mail.helper')
 const JWTHelper = require('../../../lib/jwt.helper')
+const S3 = require('../../../lib/s3.helper')
+const S3Helper = require('../../../lib/s3.helper')
 
 class controller {
 	//Read
@@ -33,10 +35,10 @@ class controller {
 	}
 
 	//Create
-	static signUp(req, res) {
+	static async signUp(req, res) {
 		let body = req.body
-		let file = req.file
-		body.profile_pic = file.buffer
+		let manageupload = await S3Helper.upload(req.file)
+		if (manageupload) body.profile_pic = manageupload.Location
 		hash(body.password, genSaltSync(12), null, (err, hash) => {
 			if (hash) {
 				body.password = hash
@@ -113,10 +115,15 @@ class controller {
 								)
 							} else if (same) {
 								if (result.active) {
-									JWTHelper.setToken(req, res, {
-										type: 1,
-										self: result._id,
-									}, 'jwt_auth')
+									JWTHelper.setToken(
+										req,
+										res,
+										{
+											type: 1,
+											self: result._id,
+										},
+										'jwt_auth'
+									)
 									return JSONResponse.success(
 										req,
 										res,

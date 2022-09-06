@@ -12,7 +12,6 @@ class Emailer {
 		},
 	})
 
-	constructor() {}
 	/**
 	 * Sends an email to the intended recipient.
 	 * @param {*} to - The recipient or recipient array for the email
