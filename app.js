@@ -37,5 +37,5 @@ app.use('/api/v1', API_V1)
 
 // Start express app
 app.listen(PORT, () => {
-	console.log(`Server listening on ${DOMAIN}:${PORT}`)
+	console.log(`Server listening on ${DOMAIN}`)
 })

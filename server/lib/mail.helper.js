@@ -21,7 +21,7 @@ class Emailer {
 	sendMail(to, sub, body) {
 		let mailOptions = {
 			to: to,
-			from: GMAIL.user,
+			from: GMAILU,
 			subject: sub,
 			text: body,
 		}
@@ -41,7 +41,7 @@ class Emailer {
 	verifyEmail(req, res, user) {
 		let mailOptions = {
 			to: user.email,
-			from: GMAIL.user,
+			from: GMAILU,
 			subject: 'Confirm email!',
 			text: `Please click the link to confirm that this is you creating an account on our platform.\n${DOMAIN}/api/v1/users/verify/${user._id}`,
 		}
