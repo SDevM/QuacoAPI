@@ -10,7 +10,7 @@ class controller {
 	//Create
 	static openReport(req, res) {
 		let body = req.body
-		let {type, self} = JWTHelper.getToken(req, res, 'jwt_auth')
+		let { type, self } = JWTHelper.getToken(req, res, 'jwt_auth')
 		type = type == 0 ? 'driver' : type == 1 ? 'user' : null
 		if (type) {
 			body.report.filer = self
@@ -19,27 +19,37 @@ class controller {
 				type: type,
 				report: body.report,
 			})
-			new_report.validate().catch((err) => {
-				JSONResponse.error(
-					req,
-					res,
-					400,
-					err.errors[
-						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-					].properties.message,
-					err.errors[
-						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-					]
-				)
-				return
-			})
 			new_report
-				.save()
-				.then((data) => {
-					JSONResponse.success(req, res, 201, 'Report placed.', data)
+				.validate()
+				.then(() => {
+					new_report
+						.save()
+						.then((data) => {
+							JSONResponse.success(req, res, 201, 'Report placed.', data)
+						})
+						.catch((err) => {
+							JSONResponse.error(
+								req,
+								res,
+								500,
+								'Failed to place report.',
+								err
+							)
+						})
 				})
 				.catch((err) => {
-					JSONResponse.error(req, res, 500, 'Failed to place report.', err)
+					JSONResponse.error(
+						req,
+						res,
+						400,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						].properties.message,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						]
+					)
+					return
 				})
 		} else {
 			JSONResponse.error(req, res, 400, 'Bad request.')
@@ -48,7 +58,6 @@ class controller {
 
 	//Read
 	static getReports(req, res) {
-
 		let self = req.session.self
 		let type = req.session.type
 		let buffer = []

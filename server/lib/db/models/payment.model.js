@@ -12,14 +12,14 @@ let paymentSchema = new db.Schema({
 	},
 	card_no: {
 		type: String,
-		required: [true, 'No card number provided.'],
+		required: [true, 'No card number provided'],
 		minLength: [16, 'Invalid card number'],
 		maxLength: [16, 'Invalid card number'],
 	},
 	expiry: {
 		type: String,
-		match: [/^((1[0-2])|(0[0-9]))\/0[\d]{2}$/gm, 'Invalid expiry date.'],
-		required: true,
+		match: [/^((1[0-2])|(0[0-9]{0,1}))\/[\d]{2}$/gm, 'Invalid expiry date.'],
+		required: [true, 'No expiry date provided'],
 	},
 })
 

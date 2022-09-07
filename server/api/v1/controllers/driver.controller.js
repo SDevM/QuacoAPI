@@ -46,31 +46,39 @@ class controller {
 			if (hash) {
 				body.password = hash
 				let new_driver = new driverModel(body)
-				new_driver.validate().catch((err) => {
-					JSONResponse.error(
-						req,
-						res,
-						400,
-						err.errors[
-							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-						].properties.message,
-						err.errors[
-							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-						]
-					)
-					return
-				})
 				new_driver
-					.save()
-					.then((result) => Emailer.verifyEmail(req, res, result))
+					.validate()
+					.then(() => {
+						new_driver
+							.save()
+							.then((result) => Emailer.verifyEmail(req, res, result))
+							.catch((err) => {
+								JSONResponse.error(
+									req,
+									res,
+									500,
+									'Fatal error handing driver model.',
+									err
+								)
+							})
+					})
 					.catch((err) => {
 						JSONResponse.error(
 							req,
 							res,
-							500,
-							'Fatal error handing driver model.',
-							err
+							400,
+							err.errors[
+								Object.keys(err.errors)[
+									Object.keys(err.errors).length - 1
+								]
+							].properties.message,
+							err.errors[
+								Object.keys(err.errors)[
+									Object.keys(err.errors).length - 1
+								]
+							]
 						)
+						return
 					})
 			} else if (err) {
 				JSONResponse.error(

@@ -44,34 +44,42 @@ class controller {
 			if (hash) {
 				body.password = hash
 				let new_user = new userModel(body)
-				new_user.validate().catch((err) => {
-					JSONResponse.error(
-						req,
-						res,
-						400,
-						err.errors[
-							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-						].properties.message,
-						err.errors[
-							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-						]
-					)
-					return
-				})
 				new_user
-					.save()
-					.then((result) => {
-						Emailer.verifyEmail(req, res, result)
+					.validate()
+					.then(() => {
+						new_user
+							.save()
+							.then((result) => {
+								Emailer.verifyEmail(req, res, result)
+							})
+							.catch((err) => {
+								new_user.delete()
+								JSONResponse.error(
+									req,
+									res,
+									500,
+									'Fatal error handling user model.',
+									err
+								)
+							})
 					})
 					.catch((err) => {
-						new_user.delete()
 						JSONResponse.error(
 							req,
 							res,
-							500,
-							'Fatal error handling user model.',
-							err
+							400,
+							err.errors[
+								Object.keys(err.errors)[
+									Object.keys(err.errors).length - 1
+								]
+							].properties.message,
+							err.errors[
+								Object.keys(err.errors)[
+									Object.keys(err.errors).length - 1
+								]
+							]
 						)
+						return
 					})
 			} else if (err) {
 				JSONResponse.error(

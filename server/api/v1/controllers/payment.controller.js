@@ -73,38 +73,41 @@ class controller {
 		let self = JWTHelper.getToken(req, res, 'jwt_auth').self
 		body.account = self
 		let newPaymentMethod = new paymentModel(body)
-		newPaymentMethod.validate().catch((err) => {
-			JSONResponse.error(
-				req,
-				res,
-				400,
-				err.errors[
-					Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-				].properties.message,
-				err.errors[
-					Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-				]
-			)
-			return
-		})
 		newPaymentMethod
-			.save()
-			.then((result) => {
-				JSONResponse.success(
-					req,
-					res,
-					202,
-					'Payment method added successfully',
-					result
-				)
+			.validate()
+			.then(() => {
+				newPaymentMethod
+					.save()
+					.then((result) => {
+						JSONResponse.success(
+							req,
+							res,
+							202,
+							'Payment method added successfully',
+							result
+						)
+					})
+					.catch((err) => {
+						JSONResponse.error(
+							req,
+							res,
+							500,
+							'Fatal error handling payment method model',
+							err
+						)
+					})
 			})
 			.catch((err) => {
 				JSONResponse.error(
 					req,
 					res,
-					500,
-					'Fatal error handling payment method model',
-					err
+					400,
+					err.errors[
+						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+					].properties.message,
+					err.errors[
+						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+					]
 				)
 			})
 	}
