@@ -70,6 +70,8 @@ class controller {
 	//Create
 	static addPaymentMethod(req, res) {
 		let body = req.body
+		let self = JWTHelper.getToken(req, res, 'jwt_auth').self
+		body.account = self
 		let newPaymentMethod = new paymentModel(body)
 		newPaymentMethod.validate().catch((err) => {
 			JSONResponse.error(
