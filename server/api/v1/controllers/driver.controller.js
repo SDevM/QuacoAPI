@@ -4,6 +4,7 @@ const JSONResponse = require('../../../lib/json.helper')
 const Emailer = require('../../../lib/mail.helper')
 const { respondCharter } = require('./charter.controller')
 const workshiftlogModel = require('../../../lib/db/models/workshiftlog.model')
+const JWTHelper = require('../../../lib/jwt.helper')
 
 class controller {
 	//Read
@@ -44,33 +45,30 @@ class controller {
 		hash(body.password, genSaltSync(12), null, (err, hash) => {
 			if (hash) {
 				body.password = hash
-				driverModel
-					.find({ email: body.email })
-					.then((result) => {
-						if (result.length > 0)
-							JSONResponse.error(req, res, 409, 'Driver already exists.')
-						else {
-							let new_driver = new driverModel(body)
-							new_driver
-								.save()
-								.then((result) => Emailer.verifyEmail(req, res, result))
-								.catch((err) => {
-									JSONResponse.error(
-										req,
-										res,
-										500,
-										'Fatal error handing driver model.',
-										err
-									)
-								})
-						}
-					})
+				let new_driver = new driverModel(body)
+				new_driver.validate().catch((err) => {
+					JSONResponse.error(
+						req,
+						res,
+						400,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						].properties.message,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						]
+					)
+					return
+				})
+				new_driver
+					.save()
+					.then((result) => Emailer.verifyEmail(req, res, result))
 					.catch((err) => {
 						JSONResponse.error(
 							req,
 							res,
 							500,
-							'Fatal error handling driver model.',
+							'Fatal error handing driver model.',
 							err
 						)
 					})
@@ -214,44 +212,43 @@ class controller {
 	}
 
 	static session(req, res) {
-		JWTHelper.getToken(req, res, 'jwt_auth', (decoded) => {
-			if (decoded.type == 0)
-				driverModel
-					.findById(decoded.self)
-					.then((result) => {
-						if (result)
-							result
-								.populate(['title', 'work_shift'])
-								.then((result) => {
-									JSONResponse.success(
-										req,
-										res,
-										200,
-										'Session resumed.',
-										result
-									)
-								})
-								.catch((err) => {
-									JSONResponse.error(
-										req,
-										res,
-										500,
-										'Failure handling user model',
-										err
-									)
-								})
-					})
-					.catch((err) => {
-						JSONResponse.error(
-							req,
-							res,
-							500,
-							'Failure handling user model',
-							err
-						)
-					})
-			else JSONResponse.error(req, res, 401, 'No session!')
-		})
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		if (decoded.type == 0)
+			driverModel
+				.findById(decoded.self)
+				.then((result) => {
+					if (result)
+						result
+							.populate(['title', 'work_shift'])
+							.then((result) => {
+								JSONResponse.success(
+									req,
+									res,
+									200,
+									'Session resumed.',
+									result
+								)
+							})
+							.catch((err) => {
+								JSONResponse.error(
+									req,
+									res,
+									500,
+									'Failure handling user model',
+									err
+								)
+							})
+				})
+				.catch((err) => {
+					JSONResponse.error(
+						req,
+						res,
+						500,
+						'Failure handling user model',
+						err
+					)
+				})
+		else JSONResponse.error(req, res, 401, 'No session!')
 	}
 
 	//Update
@@ -352,7 +349,7 @@ class controller {
 
 	//Delete
 	static deleteDriver(req, res) {
-		let did = req.session.self
+		let did = JWTHelper.getToken(req, res, 'jwt_auth').self
 		driverModel
 			.findByIdAndDelete(did)
 			.then((result) => {
@@ -361,8 +358,7 @@ class controller {
 						req,
 						res,
 						200,
-						'Successfully deleted driver.',
-						result
+						'Successfully deleted driver.'
 					)
 				} else {
 					JSONResponse.error(
@@ -385,7 +381,7 @@ class controller {
 	}
 
 	static deleteDriverAny(req, res) {
-		let did = req.params.id
+		let did = JWTHelper.getToken(req, res, 'jwt_auth').self
 		driverModel
 			.findByIdAndDelete(did)
 			.then((result) => {
@@ -394,8 +390,7 @@ class controller {
 						req,
 						res,
 						200,
-						'Successfully deleted driver.',
-						result
+						'Successfully deleted driver.'
 					)
 				} else {
 					JSONResponse.error(

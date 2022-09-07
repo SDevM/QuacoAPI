@@ -16,18 +16,17 @@ const typeCheck = (types) => {
 		}
 	}
 	return async (req, res, next) => {
-		JWTHelper.getToken(req, res, 'jwt_auth', (deco) => {
-			if (types.includes(deco.type)) {
-				next()
-			} else {
-				JSONResponse.error(
-					req,
-					res,
-					401,
-					'Access denied! Please log in, or access this route through the appropriate means.'
-				)
-			}
-		})
+		let deco = JWTHelper.getToken(req, res, 'jwt_auth')
+		if (types.includes(deco.type)) {
+			next()
+		} else {
+			JSONResponse.error(
+				req,
+				res,
+				401,
+				'Access denied! Please log in, or access this route through the appropriate means.'
+			)
+		}
 	}
 }
 

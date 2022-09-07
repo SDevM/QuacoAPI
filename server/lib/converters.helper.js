@@ -2,7 +2,7 @@ const { Readable } = require('stream')
 
 /**
  * @param binary Buffer
- * returns readableInstanceStream Readable
+ * @returns Readable
  */
 exports.bufferToStream = (binary) => {
 	const readableInstanceStream = new Readable({

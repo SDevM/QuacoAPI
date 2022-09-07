@@ -1,35 +1,36 @@
 const adminModel = require('../../../lib/db/models/admin.model')
 const { compare } = require('bcrypt-nodejs')
 const JSONResponse = require('../../../lib/json.helper')
+const JWTHelper = require('../../../lib/jwt.helper')
 
 class controller {
 	//Read
-	static get(req, res) {
-		let body = JSON.parse(req.params.obj)
-		adminModel
-			.find(body)
-			.then((results) => {
-				if (results.length > 0)
-					JSONResponse.success(
-						req,
-						res,
-						200,
-						'Collected matching admins.',
-						results
-					)
-				else {
-					JSONResponse.error(req, res, 404, 'Could not find any admins.')
-				}
-			})
-			.catch((err) => {
-				JSONResponse.error(
-					req,
-					res,
-					500,
-					'Fatal error finding admin documents in database.'
-				)
-			})
-	}
+	// static get(req, res) {
+	// 	let body = JSON.parse(req.params.obj)
+	// 	adminModel
+	// 		.find(body)
+	// 		.then((results) => {
+	// 			if (results.length > 0)
+	// 				JSONResponse.success(
+	// 					req,
+	// 					res,
+	// 					200,
+	// 					'Collected matching admins.',
+	// 					results
+	// 				)
+	// 			else {
+	// 				JSONResponse.error(req, res, 404, 'Could not find any admins.')
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			JSONResponse.error(
+	// 				req,
+	// 				res,
+	// 				500,
+	// 				'Fatal error finding admin documents in database.'
+	// 			)
+	// 		})
+	// }
 
 	//Create
 	// static signUp(req, res) {
@@ -97,10 +98,15 @@ class controller {
 									err
 								)
 							} else if (same) {
-								JWTHelper.setToken(req, res, {
-									type: 2,
-									self: result._id,
-								}, 'jwt_auth')
+								JWTHelper.setToken(
+									req,
+									res,
+									{
+										type: 2,
+										self: result._id,
+									},
+									'jwt_auth'
+								)
 								JSONResponse.success(req, res, 200, 'Successful login.')
 							} else {
 								JSONResponse.error(
@@ -132,36 +138,29 @@ class controller {
 	}
 
 	static session(req, res) {
-		JWTHelper.getToken(req, res, 'jwt_auth', (decoded) => {
-			if (decoded.type == 2)
-				adminModel
-					.findById(decoded.self)
-					.then((result) => {
-						JSONResponse.success(
-							req,
-							res,
-							200,
-							'Session resumed.',
-							result
-						)
-					})
-					.catch((err) => {
-						JSONResponse.error(
-							req,
-							res,
-							500,
-							'Failure handling user model',
-							err
-						)
-					})
-			else JSONResponse.error(req, res, 401, 'No session!')
-		})
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		if (decoded.type == 2)
+			adminModel
+				.findById(decoded.self)
+				.then((result) => {
+					JSONResponse.success(req, res, 200, 'Session resumed.', result)
+				})
+				.catch((err) => {
+					JSONResponse.error(
+						req,
+						res,
+						500,
+						'Failure handling user model',
+						err
+					)
+				})
+		else JSONResponse.error(req, res, 401, 'No session!')
 	}
 
 	//Update
 	static updateAdmin(req, res) {
 		let body = req.body
-		let aid = req.session.self
+		let aid = JWTHelper.getToken(req, res, 'jwt_auth').self
 		adminModel.findByIdAndUpdate(aid, body, (err, result) => {
 			if (err) {
 				JSONResponse.error(
@@ -187,7 +186,7 @@ class controller {
 
 	//Delete
 	static deleteAdmin(req, res) {
-		let aid = req.session.self
+		let aid = JWTHelper.getToken(req, res, 'jwt_auth').self
 		adminModel.findByIdAndDelete(aid, null, (err, result) => {
 			if (err) {
 				JSONResponse.error(
@@ -202,8 +201,7 @@ class controller {
 					req,
 					res,
 					200,
-					'Successfully deleted an admin.',
-					result
+					'Successfully deleted an admin.'
 				)
 			} else {
 				JSONResponse.error(req, res, 404, 'Could not find admin.')

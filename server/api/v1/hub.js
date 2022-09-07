@@ -3,11 +3,12 @@ const driverController = require('./controllers/driver.controller')
 const adminController = require('./controllers/admin.controller')
 const charterController = require('./controllers/charter.controller')
 const reportController = require('./controllers/report.controller')
+const paymentController = require('./controllers/payment.controller')
 const typeCheck = require('./middlewares/type.middleware')
 const JSONResponse = require('../../lib/json.helper')
-const titlesModel = require('../../lib/db/models/titles.model')
+const titlesModel = require('../../lib/db/models/title.model')
 const musicModel = require('../../lib/db/models/music.model')
-const languagesModel = require('../../lib/db/models/languages.model')
+const languagesModel = require('../../lib/db/models/language.model')
 const JWTHelper = require('../../lib/jwt.helper')
 const router = require('express').Router()
 const multer = require('multer')
@@ -16,8 +17,8 @@ const upload = multer()
 router.get('', (req, res) => {
 	res.json({
 		name: 'QuacoAPI v1',
-		version: '1.2.5',
-		routes: router.stack,
+		version: '1.2.7',
+		routes: router.stack.keys,
 	})
 })
 
@@ -58,9 +59,10 @@ router
 
 router.route('/admins/login').post(adminController.signIn)
 router.route('/admins/logout').get(logout)
-router.route('/admins/:obj').get(typeCheck('...'), adminController.get)
+
 router
 	.route('/admins')
+	.get(typeCheck(['admin']), adminController.session)
 	.patch(typeCheck(['admin']), adminController.updateAdmin)
 	.delete(typeCheck(['admin']), adminController.deleteAdmin)
 
@@ -84,6 +86,17 @@ router
 	.route('/reports')
 	.get(typeCheck(['user', 'driver']), reportController.getReports)
 	.post(typeCheck(['user', 'driver']), reportController.openReport)
+
+router
+	.route('/payments/all')
+	.get(typeCheck(['admin']), paymentController.getAny)
+router
+	.route('/payments/:id')
+	.delete(typeCheck(['user']), paymentController.deletePayment)
+router
+	.route('/payments')
+	.get(typeCheck(['user']), paymentController.get)
+	.post(typeCheck(['user']), paymentController.addPaymentMethod)
 
 router.route('/titles').get((req, res) => {
 	titlesModel

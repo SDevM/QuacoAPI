@@ -1,31 +1,37 @@
-const reportModel = require('../../../lib/db/models/reports.model')
+const reportModel = require('../../../lib/db/models/report.model')
 const charterModel = require('../../../lib/db/models/charter.model')
 const JSONResponse = require('../../../lib/json.helper')
 const Emailer = require('../../../lib/mail.helper')
 const driverModel = require('../../../lib/db/models/driver.model')
 const db = require('../../../lib/db/db')
+const JWTHelper = require('../../../lib/jwt.helper')
 
 class controller {
 	//Create
 	static openReport(req, res) {
-		let id = req.session.self
 		let body = req.body
-		let type =
-			req.session.type == 0
-				? 'driver'
-				: req.session.type == 1
-				? 'user'
-				: null
+		let {type, self} = JWTHelper.getToken(req, res, 'jwt_auth')
+		type = type == 0 ? 'driver' : type == 1 ? 'user' : null
 		if (type) {
-			reportModel.find({ charter: body.charter }).then((results) => {
-				JSONResponse.error(req, res, 409, 'Report thread already exists!')
-				return
-			})
-			body.report.filer = id
+			body.report.filer = self
 			let new_report = new reportModel({
 				charter: body.charter,
 				type: type,
 				report: body.report,
+			})
+			new_report.validate().catch((err) => {
+				JSONResponse.error(
+					req,
+					res,
+					400,
+					err.errors[
+						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+					].properties.message,
+					err.errors[
+						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+					]
+				)
+				return
 			})
 			new_report
 				.save()
@@ -42,6 +48,7 @@ class controller {
 
 	//Read
 	static getReports(req, res) {
+
 		let self = req.session.self
 		let type = req.session.type
 		let buffer = []

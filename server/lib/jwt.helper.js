@@ -15,24 +15,8 @@ class JWTHelper {
 			sameSite: 'none',
 		})
 	}
-	static getToken(
-		req,
-		res,
-		name,
-		success = (deco) => {
-			console.log(deco)
-		},
-		expire = '1d'
-	) {
-		jwt.verify(
-			req.signedCookies[name],
-			SESSION_SECRET,
-			expire,
-			(err, decoded) => {
-				if (err) throw err
-				else success(decoded)
-			}
-		)
+	static getToken(req, res, name, expire = '1d') {
+		return jwt.verify(req.signedCookies[name], SESSION_SECRET, expire)
 	}
 	static killToken(req, res, name) {
 		res.cookie(name, null, {

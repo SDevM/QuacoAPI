@@ -3,7 +3,6 @@ const { hash, compare, genSaltSync } = require('bcrypt-nodejs')
 const JSONResponse = require('../../../lib/json.helper')
 const Emailer = require('../../../lib/mail.helper')
 const JWTHelper = require('../../../lib/jwt.helper')
-const S3 = require('../../../lib/s3.helper')
 const S3Helper = require('../../../lib/s3.helper')
 
 class controller {
@@ -44,32 +43,28 @@ class controller {
 		hash(body.password, genSaltSync(12), null, (err, hash) => {
 			if (hash) {
 				body.password = hash
-				userModel
-					.find({ email: body.email })
+				let new_user = new userModel(body)
+				new_user.validate().catch((err) => {
+					JSONResponse.error(
+						req,
+						res,
+						400,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						].properties.message,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						]
+					)
+					return
+				})
+				new_user
+					.save()
 					.then((result) => {
-						if (result.length > 0)
-							JSONResponse.error(req, res, 409, 'User already exists.')
-						else {
-							let new_user = new userModel(body)
-							new_user.active = false
-							new_user
-								.save()
-								.then((result) => {
-									Emailer.verifyEmail(req, res, result)
-								})
-								.catch((err) => {
-									new_user.delete()
-									JSONResponse.error(
-										req,
-										res,
-										500,
-										'Fatal error handling user model.',
-										err
-									)
-								})
-						}
+						Emailer.verifyEmail(req, res, result)
 					})
 					.catch((err) => {
+						new_user.delete()
 						JSONResponse.error(
 							req,
 							res,
@@ -163,44 +158,43 @@ class controller {
 	}
 
 	static session(req, res) {
-		JWTHelper.getToken(req, res, 'jwt_auth', (decoded) => {
-			if (decoded.type == 1)
-				userModel
-					.findById(decoded.self)
-					.then((result) => {
-						if (result)
-							result
-								.populate('title')
-								.then((result) => {
-									JSONResponse.success(
-										req,
-										res,
-										200,
-										'Session resumed.',
-										result
-									)
-								})
-								.catch((err) => {
-									JSONResponse.error(
-										req,
-										res,
-										500,
-										'Failure handling user model',
-										err
-									)
-								})
-					})
-					.catch((err) => {
-						JSONResponse.error(
-							req,
-							res,
-							500,
-							'Failure handling user model',
-							err
-						)
-					})
-			else JSONResponse.error(req, res, 401, 'No session!')
-		})
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		if (decoded.type == 1)
+			userModel
+				.findById(decoded.self)
+				.then((result) => {
+					if (result)
+						result
+							.populate('title')
+							.then((result) => {
+								JSONResponse.success(
+									req,
+									res,
+									200,
+									'Session resumed.',
+									result
+								)
+							})
+							.catch((err) => {
+								JSONResponse.error(
+									req,
+									res,
+									500,
+									'Failure handling user model',
+									err
+								)
+							})
+				})
+				.catch((err) => {
+					JSONResponse.error(
+						req,
+						res,
+						500,
+						'Failure handling user model',
+						err
+					)
+				})
+		else JSONResponse.error(req, res, 401, 'No session!')
 	}
 
 	//Update
@@ -296,13 +290,7 @@ class controller {
 			.findByIdAndDelete(uid)
 			.then((result) => {
 				if (result) {
-					JSONResponse.success(
-						req,
-						res,
-						200,
-						'Successfully removed user.',
-						result
-					)
+					JSONResponse.success(req, res, 200, 'Successfully removed user.')
 				} else {
 					JSONResponse.error(
 						req,
@@ -327,15 +315,9 @@ class controller {
 		let uid = req.params.id
 		userModel
 			.findByIdAndDelete(uid)
-			.then((results) => {
+			.then((result) => {
 				if (result) {
-					JSONResponse.success(
-						req,
-						res,
-						200,
-						'Successfully removed user.',
-						result
-					)
+					JSONResponse.success(req, res, 200, 'Successfully removed user.')
 				} else {
 					JSONResponse.error(
 						req,
