@@ -28,10 +28,13 @@ router.get('', (req, res) => {
 		version: '1.2.7',
 	}
 	concat.forEach((e, index) => {
-		body[`Route(${index.toString()})`] = e
+		body[`<p>Route(${index.toString()})`] = e + '</p>'
 	})
-	console.log(body)
-	res.json(body)
+	let view = ''
+	Object.keys(body).forEach((e) => {
+		view += `${e.toUpperCase()} ${body[e]} <br>`
+	})
+	res.send(view)
 })
 
 function logout(req, res) {
