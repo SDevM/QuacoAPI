@@ -35,7 +35,13 @@ class JWTHelper {
 		)
 	}
 	static killToken(req, res, name) {
-		res.clearCookie(name)
+		res.cookie(name, null, {
+			expiresIn: 0,
+			httpOnly: true,
+			secure: true,
+			signed: true,
+			sameSite: 'none',
+		})
 	}
 }
 
