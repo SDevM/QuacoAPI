@@ -15,10 +15,14 @@ const multer = require('multer')
 const upload = multer()
 
 router.get('', (req, res) => {
+	let concat = []
+	for (let layer of router.stack) {
+		concat.push(layer.route)
+	}
 	res.json({
 		name: 'QuacoAPI v1',
 		version: '1.2.7',
-		routes: router.stack.keys,
+		routes: concat,
 	})
 })
 
