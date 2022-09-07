@@ -17,13 +17,21 @@ const upload = multer()
 router.get('', (req, res) => {
 	let concat = []
 	for (let layer of router.stack) {
-		concat.push(layer.route)
+		concat.push(
+			layer.route.path +
+				' : ' +
+				JSON.stringify(Object.keys(layer.route.methods))
+		)
 	}
-	res.json({
+	let body = {
 		name: 'QuacoAPI v1',
 		version: '1.2.7',
-		routes: concat,
+	}
+	concat.forEach((e, index) => {
+		body[`Route(${index.toString()})`] = e
 	})
+	console.log(body)
+	res.json(body)
 })
 
 function logout(req, res) {
