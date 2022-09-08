@@ -68,10 +68,12 @@ userSchema.pre('findByIdAndUpdate', async function (next, opts) {
 })
 
 userSchema.methods.SignIn = async function (password) {
-	compare(password, this.password, (err, same) => {
-		if (err) throw err
-		else if (same) return true
-		return false
+	return new Promise((resolve, reject) => {
+		compare(password, this.password, (err, same) => {
+			if (err) reject(err)
+			else if (same) resolve(true)
+			return resolve(false)
+		})
 	})
 }
 
