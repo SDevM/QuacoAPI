@@ -48,13 +48,7 @@ class controller {
 					.save()
 					.then((result) => Emailer.verifyEmail(req, res, result))
 					.catch((err) => {
-						JSONResponse.error(
-							req,
-							res,
-							500,
-							'Fatal error handling user model.',
-							err
-						)
+						JSONResponse.error(req, res, 500, err.message, err)
 					})
 			})
 			.catch((err) => {
