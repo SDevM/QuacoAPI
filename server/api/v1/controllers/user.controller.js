@@ -121,26 +121,13 @@ class controller {
 				.findById(decoded.self)
 				.then((result) => {
 					if (result)
-						result
-							.populate('title')
-							.then((result) => {
-								JSONResponse.success(
-									req,
-									res,
-									200,
-									'Session resumed.',
-									result
-								)
-							})
-							.catch((err) => {
-								JSONResponse.error(
-									req,
-									res,
-									500,
-									'Failure handling user model',
-									err
-								)
-							})
+						JSONResponse.success(
+							req,
+							res,
+							200,
+							'Session resumed.',
+							result
+						)
 				})
 				.catch((err) => {
 					JSONResponse.error(

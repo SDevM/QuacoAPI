@@ -226,26 +226,8 @@ class controller {
 				.findById(decoded.self)
 				.then((result) => {
 					if (result)
-						result
-							.populate(['title', 'work_shift'])
-							.then((result) => {
-								JSONResponse.success(
-									req,
-									res,
-									200,
-									'Session resumed.',
-									result
-								)
-							})
-							.catch((err) => {
-								JSONResponse.error(
-									req,
-									res,
-									500,
-									'Failure handling user model',
-									err
-								)
-							})
+						JSONResponse.success(req, res, 200, 'Session resumed', result)
+					else JSONResponse.error(req, res, 404, 'No user found')
 				})
 				.catch((err) => {
 					JSONResponse.error(
