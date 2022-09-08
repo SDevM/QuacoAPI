@@ -31,7 +31,7 @@ paymentSchema.methods.checkDupe = function () {
 			.catch((err) => {
 				reject(err)
 			})
-		resolve(!!dupe)
+		resolve(dupe.length > 0)
 	})
 }
 
