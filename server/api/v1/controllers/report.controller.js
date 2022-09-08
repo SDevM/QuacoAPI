@@ -96,7 +96,7 @@ class controller {
 				})
 			})
 			.catch((err) => {
-				JSONResponse.error(req, res, 500, 'Failure handling charter model.')
+				JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!')
 			})
 	}
 

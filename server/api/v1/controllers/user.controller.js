@@ -47,7 +47,7 @@ class controller {
 					.save()
 					.then((result) => Emailer.verifyEmail(req, res, result))
 					.catch((err) => {
-						JSONResponse.error(req, res, 500, err.message, err)
+						JSONResponse.error(req, res, 400, err.message, err)
 					})
 			})
 			.catch((err) => {
@@ -100,6 +100,7 @@ class controller {
 					} else {
 						JSONResponse.error(req, res, 401, 'Password does not match.')
 					}
+				} else {
 				}
 			})
 			.catch((err) => {
@@ -157,33 +158,21 @@ class controller {
 	static verifyUser(req, res) {
 		let uid = req.params.id
 		userModel
-			.findById(uid)
+			.findByIdAndUpdate(uid, { active: true })
 			.then((result) => {
 				if (result) {
-					result.active = true
-					result
-						.save()
-						.then((result) => {
-							JSONResponse.success(
-								req,
-								res,
-								200,
-								'User verified successfully.'
-							)
-						})
-						.catch((err) => {
-							JSONResponse.error(
-								req,
-								res,
-								500,
-								'Fatal error handling user model.',
-								err
-							)
-						})
+					JSONResponse.success(
+						req,
+						res,
+						200,
+						'User verified successfully.'
+					)
+				} else {
+					JSONResponse.error(req, res, 404, 'No such user!')
 				}
 			})
 			.catch((err) => {
-				JSONResponse.error(req, res, 400, 'Invalid user!', err)
+				JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
 			})
 	}
 

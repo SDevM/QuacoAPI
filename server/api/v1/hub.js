@@ -120,7 +120,7 @@ router.route('/titles').get((req, res) => {
 			JSONResponse.success(req, res, 200, 'Collected titles', results)
 		})
 		.catch((err) => {
-			JSONResponse.error(req, res, 500, 'Failure handling titles model', err)
+			JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
 		})
 })
 router.route('/music').get((req, res) => {
@@ -130,7 +130,7 @@ router.route('/music').get((req, res) => {
 			JSONResponse.success(req, res, 200, 'Collected titles', results)
 		})
 		.catch((err) => {
-			JSONResponse.error(req, res, 500, 'Failure handling titles model', err)
+			JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
 		})
 })
 router.route('/languages').get((req, res) => {
@@ -140,7 +140,7 @@ router.route('/languages').get((req, res) => {
 			JSONResponse.success(req, res, 200, 'Collected titles', results)
 		})
 		.catch((err) => {
-			JSONResponse.error(req, res, 500, 'Failure handling titles model', err)
+			JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
 		})
 })
 
