@@ -40,57 +40,37 @@ class controller {
 		let manageupload = await S3Helper.upload(req.file, now)
 		if (manageupload)
 			body.profile_pic = { key: now, link: manageupload.Location }
-		hash(body.password, genSaltSync(12), null, (err, hash) => {
-			if (hash) {
-				body.password = hash
-				let new_user = new userModel(body)
+		let new_user = new userModel(body)
+		new_user
+			.validate()
+			.then(() => {
 				new_user
-					.validate()
-					.then(() => {
-						new_user
-							.save()
-							.then((result) => {
-								Emailer.verifyEmail(req, res, result)
-							})
-							.catch((err) => {
-								new_user.delete()
-								JSONResponse.error(
-									req,
-									res,
-									500,
-									'Fatal error handling user model.',
-									err
-								)
-							})
-					})
+					.save()
+					.then((result) => Emailer.verifyEmail(req, res, result))
 					.catch((err) => {
 						JSONResponse.error(
 							req,
 							res,
-							400,
-							err.errors[
-								Object.keys(err.errors)[
-									Object.keys(err.errors).length - 1
-								]
-							].properties.message,
-							err.errors[
-								Object.keys(err.errors)[
-									Object.keys(err.errors).length - 1
-								]
-							]
+							500,
+							'Fatal error handling user model.',
+							err
 						)
-						return
 					})
-			} else if (err) {
+			})
+			.catch((err) => {
 				JSONResponse.error(
 					req,
 					res,
-					500,
-					'Fatal error hashing password.',
-					err
+					400,
+					err.errors[
+						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+					].properties.message,
+					err.errors[
+						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+					]
 				)
-			}
-		})
+				return
+			})
 	}
 
 	//Read
@@ -98,61 +78,41 @@ class controller {
 		let body = req.body
 		userModel
 			.findOne({ email: body.email })
-			.then((result) => {
+			.then(async (result) => {
 				if (result) {
-					compare(
-						body.password,
-						Buffer.from(result.password, 'utf-8').toString(),
-						(err, same) => {
-							if (err) {
-								JSONResponse.error(
-									req,
-									res,
-									500,
-									'Fatal error comparing hash.',
-									err
-								)
-							} else if (same) {
-								if (result.active) {
-									JWTHelper.setToken(
-										req,
-										res,
-										{
-											type: 1,
-											self: result._id,
-										},
-										'jwt_auth'
-									)
-									return JSONResponse.success(
-										req,
-										res,
-										200,
-										'Successful login.'
-									)
-								} else {
-									JSONResponse.error(
-										req,
-										res,
-										401,
-										'Email unverified.'
-									)
-								}
-							} else
-								JSONResponse.error(
-									req,
-									res,
-									401,
-									'Password does not match.'
-								)
-						}
-					)
-				} else
-					JSONResponse.error(
-						req,
-						res,
-						404,
-						'Could not find specified user.'
-					)
+					if (!result.active) {
+						JSONResponse.error(req, res, 401, 'Email unverified.')
+						return
+					}
+					const login = await result.SignIn(body.password).catch((err) => {
+						JSONResponse.error(
+							req,
+							res,
+							500,
+							'Fatal error comparing hash.',
+							err
+						)
+					})
+					if (login) {
+						JWTHelper.setToken(
+							req,
+							res,
+							{
+								type: 1,
+								self: result._id,
+							},
+							'jwt_auth'
+						)
+						return JSONResponse.success(
+							req,
+							res,
+							200,
+							'Successful login.'
+						)
+					} else {
+						JSONResponse.error(req, res, 401, 'Password does not match.')
+					}
+				}
 			})
 			.catch((err) => {
 				JSONResponse.error(
@@ -241,7 +201,7 @@ class controller {
 
 	static updateUser(req, res) {
 		let body = req.body
-		if (body.profile_pic) body.profile_pic = Buffer.from(body.profile_pic)
+		body.profile_pic = req.file
 		let uid = req.session.self
 		userModel.findByIdAndUpdate(uid, body, (err, result) => {
 			if (err)

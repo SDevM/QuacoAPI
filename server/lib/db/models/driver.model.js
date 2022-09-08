@@ -46,4 +46,34 @@ let driverSchema = new db.Schema({
 	},
 })
 
+driverSchema.pre('save', function (next, opts) {
+	if (
+		/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])((?=.*[^\w\d\s:])|(?=.*[_]))([^\s])*$/gm.test(
+			this.password
+		)
+	)
+		hash(this.password, genSaltSync(12), null, (err, hash) => {
+			if (err) throw err
+			else this.password = hash
+		})
+	else
+		throw new Error(
+			'Password does not meet requirements \n Password must be between 8 and 16 characters \n Password must have one letter \n Password must have 1 number \n Password must have one symbol'
+		)
+})
+
+driverSchema.pre('findByIdAndUpdate', async function (next, opts) {
+	if (this.profile_pic) {
+		const docToUpdate = await this.model.findOne(this.getQuery())
+		const now = Date.now().toString(16)
+		const manageupload = await S3Helper.upload(this.profile_pic, now)
+		if (manageupload) {
+			this.set({ profile_pic: { key: now, link: manageupload.Location } })
+			const oldKey = docToUpdate.profile_pic.key
+			const managedelete = await S3Helper.delete(oldKey)
+			if (managedelete) next()
+		} else throw new Error('Upload failed.')
+	}
+})
+
 module.exports = db.model('drivers', driverSchema)

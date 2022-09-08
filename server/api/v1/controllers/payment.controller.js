@@ -72,7 +72,19 @@ class controller {
 		let body = req.body
 		let self = JWTHelper.getToken(req, res, 'jwt_auth').self
 		body.account = self
+		let flag = false
 		let newPaymentMethod = new paymentModel(body)
+		newPaymentMethod.checkDupe().then((dupe) => {
+			if (dupe) {
+				flag = true
+				JSONResponse.error(
+					req,
+					res,
+					409,
+					'Payment method already registered'
+				)
+			}
+		})
 		newPaymentMethod
 			.validate()
 			.then(() => {
