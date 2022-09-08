@@ -23,7 +23,7 @@ let paymentSchema = new db.Schema({
 	},
 })
 
-paymentSchema.methods.checkDupe = async function () {
+paymentSchema.methods.checkDupe = function () {
 	return new Promise(async (resolve, reject) => {
 		const dupe = await db
 			.model('payments')

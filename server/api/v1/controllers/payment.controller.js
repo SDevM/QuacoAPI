@@ -68,61 +68,53 @@ class controller {
 	}
 
 	//Create
-	static addPaymentMethod(req, res) {
+	static async addPaymentMethod(req, res) {
 		let body = req.body
 		let self = JWTHelper.getToken(req, res, 'jwt_auth').self
 		body.account = self
-		let flag = false
 		let newPaymentMethod = new paymentModel(body)
-		newPaymentMethod.checkDupe().then((dupe) => {
-			if (dupe) {
-				flag = true
-				JSONResponse.error(
-					req,
-					res,
-					409,
-					'Payment method already registered'
-				)
-			}
-		})
-		if (flag) return
-		newPaymentMethod
-			.validate()
-			.then(() => {
-				newPaymentMethod
-					.save()
-					.then((result) => {
-						JSONResponse.success(
-							req,
-							res,
-							202,
-							'Payment method added successfully',
-							result
-						)
-					})
-					.catch((err) => {
-						JSONResponse.error(
-							req,
-							res,
-							500,
-							'Fatal error handling payment method model',
-							err
-						)
-					})
-			})
-			.catch((err) => {
-				JSONResponse.error(
-					req,
-					res,
-					400,
-					err.errors[
-						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-					].properties.message,
-					err.errors[
-						Object.keys(err.errors)[Object.keys(err.errors).length - 1]
-					]
-				)
-			})
+		let dupe = await newPaymentMethod.checkDupe()
+		if (dupe) {
+			JSONResponse.error(req, res, 409, 'Payment method already registered')
+		} else {
+			newPaymentMethod
+				.validate()
+				.then(() => {
+					newPaymentMethod
+						.save()
+						.then((result) => {
+							JSONResponse.success(
+								req,
+								res,
+								202,
+								'Payment method added successfully',
+								result
+							)
+						})
+						.catch((err) => {
+							JSONResponse.error(
+								req,
+								res,
+								500,
+								'Fatal error handling payment method model',
+								err
+							)
+						})
+				})
+				.catch((err) => {
+					JSONResponse.error(
+						req,
+						res,
+						400,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						].properties.message,
+						err.errors[
+							Object.keys(err.errors)[Object.keys(err.errors).length - 1]
+						]
+					)
+				})
+		}
 	}
 
 	//Delete
