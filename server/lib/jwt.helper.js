@@ -16,7 +16,14 @@ class JWTHelper {
 		})
 	}
 	static getToken(req, res, name, expire = '1d') {
-		return jwt.verify(req.signedCookies[name], SESSION_SECRET, expire)
+		let decoded
+		try {
+			decoded = jwt.verify(req.signedCookies[name], SESSION_SECRET, expire)
+		} catch (err) {
+			console.error(err)
+			decoded = null
+		}
+		return decoded
 	}
 	static killToken(req, res, name) {
 		res.cookie(name, null, {

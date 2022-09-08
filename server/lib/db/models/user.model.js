@@ -53,7 +53,7 @@ userSchema.pre('save', function (next, opts) {
 		)
 })
 
-userSchema.pre('findByIdAndUpdate', async function (next, opts) {
+userSchema.pre('findOneAndUpdate', async function (next, opts) {
 	if (this.profile_pic) {
 		const docToUpdate = await this.model.findOne(this.getQuery())
 		const now = Date.now().toString(16)
@@ -61,8 +61,8 @@ userSchema.pre('findByIdAndUpdate', async function (next, opts) {
 		if (manageupload) {
 			this.set({ profile_pic: { key: now, link: manageupload.Location } })
 			const oldKey = docToUpdate.profile_pic.key
-			const managedelete = await S3Helper.delete(oldKey)
-			if (managedelete) next()
+			await S3Helper.delete(oldKey)
+			next()
 		} else throw new Error('Upload failed.')
 	}
 })

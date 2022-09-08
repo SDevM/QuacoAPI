@@ -25,7 +25,7 @@ router.get('', (req, res) => {
 	}
 	let body = {
 		name: 'QuacoAPI v1',
-		version: '1.2.7',
+		version: '1.2.8',
 	}
 	concat.forEach((e, index) => {
 		body[`<p>Route(${index.toString()})`] = e + '</p>'
