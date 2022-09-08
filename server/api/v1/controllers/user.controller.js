@@ -166,7 +166,8 @@ class controller {
 	static updateUser(req, res) {
 		let body = req.body
 		body.profile_pic = req.file
-		let uid = req.session.self
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		let uid = decoded.self
 		userModel.findByIdAndUpdate(uid, body, (err, result) => {
 			if (err)
 				JSONResponse.error(
@@ -177,7 +178,6 @@ class controller {
 					err
 				)
 			else if (result) {
-				req.session.self = result
 				JSONResponse.success(
 					req,
 					res,
@@ -217,7 +217,8 @@ class controller {
 
 	//Delete
 	static deleteUser(req, res) {
-		let uid = req.session.self
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		let uid = decoded.self
 		userModel
 			.findByIdAndDelete(uid)
 			.then((result) => {

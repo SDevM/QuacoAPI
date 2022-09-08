@@ -7,6 +7,7 @@ const { Client } = require('@googlemaps/google-maps-services-js')
 const Emailer = require('../../../lib/mail.helper')
 const { CHARTERCOOL } = process.env
 const workshiftlogModel = require('../../../lib/db/models/workshiftlog.model')
+const JWTHelper = require('../../../lib/jwt.helper')
 const client = new Client()
 
 class controller {
@@ -103,15 +104,16 @@ class controller {
 	}
 
 	static respondCharter(req, res) {
-		let did = req.session._id
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		let did = decoded._id
 		let body = req.body
 		let driver = body.self
 		function recursive() {
 			if (
-				!req.session.self.chartered &&
+				!decoded.self.chartered &&
 				!(
 					new Date().getMilliseconds() / 1000 / 60 >=
-					req.session.shift.time_end
+					decoded.shift.time_end
 				)
 			)
 				charterModel
@@ -225,14 +227,18 @@ class controller {
 															}. Please be punctual and follow company pickup guidelines.
 											`
 														)
-														req.session.self.chartered = true
-														req.session.self
+														decoded.self.chartered = true
+														decoded.self
 															.save(recursive)
 															.catch((err) => {
 																console.error(err)
-																req.session.destroy()
+																JWTHelper.killToken(
+																	req,
+																	res,
+																	'jwt_auth'
+																)
 																sendMail(
-																	req.session.self.email,
+																	decoded.self.email,
 																	"You've been signed out",
 																	`Dear Driver,\n
 																		Due to a server error you have been logged out, the server might be down, if this is the case rest assured out team is working on resolving the issue.`
@@ -296,25 +302,27 @@ class controller {
 			else if (
 				!(
 					new Date().getMilliseconds() / 1000 / 60 >=
-					req.session.shift.time_end
+					decoded.shift.time_end
 				)
 			)
 				setTimeout(() => {
-					if (req.session) recursive()
+					if (decoded) recursive()
 				}, 1000 * 60 * parseInt(CHARTERCOOL))
 			else {
 				workshiftlogModel
-					.findById(req.session.self.work_shift)
+					.findByIdAndUpdate(decoded.self.work_shift, {
+						time_end: new Date().getMilliseconds() / 1000 / 60,
+					})
 					.then((result) => {
-						result.time_end = new Date().getMilliseconds() / 1000 / 60
-						req.session.destroy()
+						JWTHelper.killToken(req, res, 'jwt_auth')
 					})
 					.catch((err) => {
-						req.session.destroy()
+						JWTHelper.killToken(req, res, 'jwt_auth')
 					})
 			}
 		}
 		recursive()
+		res.end()
 	}
 
 	static deleteCharter(req, res) {

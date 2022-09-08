@@ -123,9 +123,11 @@ class controller {
 										'jwt_auth'
 									)
 									result
-										.populate(['title', 'work_shift'])
+										.populate(['work_shift'])
 										.then((result) => {
-											req.session.shift = result.work_shift
+											let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+											decoded.shift = result.work_shift
+											JWTHelper.setToken(req, res, decoded, 'jwt_auth')
 											if (
 												new Date().getMilliseconds() / 1000 / 60 <
 												result.work_shift.time_start
@@ -277,7 +279,8 @@ class controller {
 
 	static updateDriver(req, res) {
 		let body = req.body
-		let uid = req.session.self
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		let uid = decoded.self
 		driverModel.findByIdAndUpdate(uid, body, (err, result) => {
 			if (err) {
 				JSONResponse.error(

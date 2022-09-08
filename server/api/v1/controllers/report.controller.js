@@ -58,8 +58,9 @@ class controller {
 
 	//Read
 	static getReports(req, res) {
-		let self = req.session.self
-		let type = req.session.type
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		let self = decoded.self
+		let type = decoded.type
 		let buffer = []
 		charterModel
 			.find(
@@ -190,7 +191,8 @@ class controller {
 	}
 
 	static threadReport(req, res) {
-		let self = req.session.self
+		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		let self = decoded.self
 		let body = req.body
 		let id = req.params.id
 		reportModel
