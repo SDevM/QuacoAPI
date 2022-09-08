@@ -24,12 +24,15 @@ let paymentSchema = new db.Schema({
 })
 
 paymentSchema.methods.checkDupe = async function () {
-	return await db
-		.model('payments')
-		.find({ account: this.account, card_no: this.card_no })
-		.catch((err) => {
-			console.error(err)
-		})
+	return new Promise(async (resolve, reject) => {
+		const dupe = await db
+			.model('payments')
+			.find({ account: this.account, card_no: this.card_no })
+			.catch((err) => {
+				reject(err)
+			})
+		resolve(!!dupe)
+	})
 }
 
 module.exports = db.model('payments', paymentSchema)

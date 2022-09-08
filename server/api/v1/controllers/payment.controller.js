@@ -85,6 +85,7 @@ class controller {
 				)
 			}
 		})
+		if (flag) return
 		newPaymentMethod
 			.validate()
 			.then(() => {
