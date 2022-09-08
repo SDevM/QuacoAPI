@@ -1,5 +1,4 @@
 const userModel = require('../../../lib/db/models/user.model')
-const { hash, compare, genSaltSync } = require('bcrypt-nodejs')
 const JSONResponse = require('../../../lib/json.helper')
 const Emailer = require('../../../lib/mail.helper')
 const JWTHelper = require('../../../lib/jwt.helper')

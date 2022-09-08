@@ -4,7 +4,6 @@ const pricingModel = require('../../../lib/db/models/pricing.model')
 const JSONResponse = require('../../../lib/json.helper')
 const db = require('../../../lib/db/db')
 const { Client } = require('@googlemaps/google-maps-services-js')
-const driverModel = require('../../../lib/db/models/driver.model')
 const Emailer = require('../../../lib/mail.helper')
 const { CHARTERCOOL } = process.env
 const workshiftlogModel = require('../../../lib/db/models/workshiftlog.model')

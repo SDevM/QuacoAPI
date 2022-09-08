@@ -1,3 +1,5 @@
+const { compare, hash, genSaltSync } = require('bcrypt-nodejs')
+const S3Helper = require('../../s3.helper.js')
 const db = require('../db.js')
 
 let driverSchema = new db.Schema({
