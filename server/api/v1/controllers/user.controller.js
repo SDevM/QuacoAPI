@@ -168,7 +168,7 @@ class controller {
 		body.profile_pic = req.file
 		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
 		let uid = decoded.self
-		userModel.findByIdAndUpdate(uid, body, (err, result) => {
+		userModel.findByIdAndUpdate(uid, body, { new: true }, (err, result) => {
 			if (err)
 				JSONResponse.error(
 					req,
@@ -193,7 +193,7 @@ class controller {
 	static updateUserAny(req, res) {
 		let body = req.body
 		let uid = req.params.id
-		userModel.findByIdAndUpdate(uid, body, (err, result) => {
+		userModel.findByIdAndUpdate(uid, body, { new: true }, (err, result) => {
 			if (err) {
 				JSONResponse.error(
 					req,

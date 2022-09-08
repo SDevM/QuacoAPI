@@ -125,9 +125,18 @@ class controller {
 									result
 										.populate(['work_shift'])
 										.then((result) => {
-											let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+											let decoded = JWTHelper.getToken(
+												req,
+												res,
+												'jwt_auth'
+											)
 											decoded.shift = result.work_shift
-											JWTHelper.setToken(req, res, decoded, 'jwt_auth')
+											JWTHelper.setToken(
+												req,
+												res,
+												decoded,
+												'jwt_auth'
+											)
 											if (
 												new Date().getMilliseconds() / 1000 / 60 <
 												result.work_shift.time_start
