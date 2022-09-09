@@ -103,7 +103,7 @@ class controller {
 									res,
 									{
 										type: 2,
-										self: result._id,
+										self: result._id.toString(),
 									},
 									'jwt_auth'
 								)
