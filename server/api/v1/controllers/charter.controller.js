@@ -22,11 +22,11 @@ class controller {
 						req,
 						res,
 						200,
-						'Collected matching charters.',
+						'Collected matching charters',
 						results
 					)
 				else {
-					JSONResponse.error(req, res, 404, 'Could not find any charters.')
+					JSONResponse.error(req, res, 404, 'Could not find any charters')
 				}
 			})
 			.catch((err) => {
@@ -34,7 +34,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling charter model.'
+					'Fatal error handling charter model'
 				)
 			})
 	}
@@ -59,7 +59,7 @@ class controller {
 											req,
 											res,
 											202,
-											'Charter placed successfully.',
+											'Charter placed successfully',
 											result
 										)
 									else
@@ -67,7 +67,7 @@ class controller {
 											req,
 											res,
 											409,
-											'Could not place charter.'
+											'Could not place charter'
 										)
 								})
 								.catch((err) => {
@@ -75,7 +75,7 @@ class controller {
 										req,
 										res,
 										500,
-										'Fatal error handling charter model.',
+										'Fatal error handling charter model',
 										err
 									)
 								})
@@ -84,7 +84,7 @@ class controller {
 								req,
 								res,
 								409,
-								'Only one charter may be placed at a time.'
+								'Only one charter may be placed at a time'
 							)
 						}
 					})
@@ -93,13 +93,13 @@ class controller {
 							req,
 							res,
 							500,
-							'Fatal error handling charter model.',
+							'Fatal error handling charter model',
 							err
 						)
 					})
 			})
 			.catch((err) => {
-				JSONResponse.error(req, res, 404, 'Could not find price.')
+				JSONResponse.error(req, res, 404, 'Could not find price')
 			})
 	}
 
@@ -337,11 +337,11 @@ class controller {
 						req,
 						res,
 						200,
-						'Successfully removed charter.',
+						'Successfully removed charter',
 						result
 					)
 				} else {
-					JSONResponse.error(req, res, 404, 'No matching charter found.')
+					JSONResponse.error(req, res, 404, 'No matching charter found')
 				}
 			})
 			.catch((err) => {
@@ -349,7 +349,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling charter model.',
+					'Fatal error handling charter model',
 					err
 				)
 			})

@@ -74,7 +74,7 @@ driverSchema.pre('findByIdAndUpdate', async function (next, opts) {
 			const oldKey = docToUpdate.profile_pic.key
 			const managedelete = await S3Helper.delete(oldKey)
 			if (managedelete) next()
-		} else throw new Error('Upload failed.')
+		} else throw new Error('Upload failed')
 	}
 })
 

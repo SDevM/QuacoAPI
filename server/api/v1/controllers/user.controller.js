@@ -16,17 +16,17 @@ class controller {
 						req,
 						res,
 						200,
-						'Collected matching users.',
+						'Collected matching users',
 						results
 					)
-				else JSONResponse.error(req, res, 404, 'Could not find any users.')
+				else JSONResponse.error(req, res, 404, 'Could not find any users')
 			})
 			.catch((err) => {
 				JSONResponse.error(
 					req,
 					res,
 					500,
-					'Fatal error handling user model.',
+					'Fatal error handling user model',
 					err
 				)
 			})
@@ -74,7 +74,7 @@ class controller {
 			.then(async (result) => {
 				if (result) {
 					if (!result.active) {
-						JSONResponse.error(req, res, 401, 'Email unverified.')
+						JSONResponse.error(req, res, 401, 'Email unverified')
 						return
 					}
 					const login = await result.SignIn(body.password).catch((err) => {
@@ -82,7 +82,7 @@ class controller {
 							req,
 							res,
 							500,
-							'Fatal error comparing hash.',
+							'Fatal error comparing hash',
 							err
 						)
 					})
@@ -96,11 +96,12 @@ class controller {
 							},
 							'jwt_auth'
 						)
-						JSONResponse.success(req, res, 200, 'Successful login.')
+						JSONResponse.success(req, res, 200, 'Successful login')
 					} else {
-						JSONResponse.error(req, res, 401, 'Password does not match.')
+						JSONResponse.error(req, res, 401, 'Password does not match')
 					}
 				} else {
+					JSONResponse.error(req, res, 404, 'Account does not exist')
 				}
 			})
 			.catch((err) => {
@@ -108,7 +109,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling user model.',
+					'Fatal error handling user model',
 					err
 				)
 			})
@@ -121,13 +122,7 @@ class controller {
 				.findById(decoded.self)
 				.then((result) => {
 					if (result)
-						JSONResponse.success(
-							req,
-							res,
-							200,
-							'Session resumed.',
-							result
-						)
+						JSONResponse.success(req, res, 200, 'Session resumed', result)
 				})
 				.catch((err) => {
 					JSONResponse.error(
@@ -148,12 +143,7 @@ class controller {
 			.findByIdAndUpdate(uid, { active: true })
 			.then((result) => {
 				if (result) {
-					JSONResponse.success(
-						req,
-						res,
-						200,
-						'User verified successfully.'
-					)
+					JSONResponse.success(req, res, 200, 'User verified successfully')
 				} else {
 					JSONResponse.error(req, res, 404, 'No such user!')
 				}
@@ -174,7 +164,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling user model.',
+					'Fatal error handling user model',
 					err
 				)
 			else if (result) {
@@ -182,11 +172,11 @@ class controller {
 					req,
 					res,
 					200,
-					'Successfully updated user.',
+					'Successfully updated user',
 					result
 				)
 			} else
-				JSONResponse.error(req, res, 404, 'Could not find specified user.')
+				JSONResponse.error(req, res, 404, 'Could not find specified user')
 		})
 	}
 
@@ -199,7 +189,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling user model.',
+					'Fatal error handling user model',
 					err
 				)
 			} else if (result.length == 1)
@@ -207,11 +197,10 @@ class controller {
 					req,
 					res,
 					200,
-					'Successfully updated user.',
+					'Successfully updated user',
 					result
 				)
-			else
-				JSONResponse.error(req, res, 404, 'Could not find specified user.')
+			else JSONResponse.error(req, res, 404, 'Could not find specified user')
 		})
 	}
 
@@ -223,13 +212,13 @@ class controller {
 			.findByIdAndDelete(uid)
 			.then((result) => {
 				if (result) {
-					JSONResponse.success(req, res, 200, 'Successfully removed user.')
+					JSONResponse.success(req, res, 200, 'Successfully removed user')
 				} else {
 					JSONResponse.error(
 						req,
 						res,
 						404,
-						'Could not find specified user.'
+						'Could not find specified user'
 					)
 				}
 			})
@@ -238,7 +227,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling user model.',
+					'Fatal error handling user model',
 					err
 				)
 			})
@@ -250,13 +239,13 @@ class controller {
 			.findByIdAndDelete(uid)
 			.then((result) => {
 				if (result) {
-					JSONResponse.success(req, res, 200, 'Successfully removed user.')
+					JSONResponse.success(req, res, 200, 'Successfully removed user')
 				} else {
 					JSONResponse.error(
 						req,
 						res,
 						404,
-						'Could not find specified user.'
+						'Could not find specified user'
 					)
 				}
 			})
@@ -265,7 +254,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling user model.',
+					'Fatal error handling user model',
 					err
 				)
 			})

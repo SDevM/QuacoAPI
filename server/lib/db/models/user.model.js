@@ -63,7 +63,7 @@ userSchema.pre('findOneAndUpdate', async function (next, opts) {
 			const oldKey = docToUpdate.profile_pic.key
 			await S3Helper.delete(oldKey)
 			next()
-		} else throw new Error('Upload failed.')
+		} else throw new Error('Upload failed')
 	}
 })
 

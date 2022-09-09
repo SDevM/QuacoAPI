@@ -15,11 +15,11 @@ class controller {
 	// 					req,
 	// 					res,
 	// 					200,
-	// 					'Collected matching admins.',
+	// 					'Collected matching admins',
 	// 					results
 	// 				)
 	// 			else {
-	// 				JSONResponse.error(req, res, 404, 'Could not find any admins.')
+	// 				JSONResponse.error(req, res, 404, 'Could not find any admins')
 	// 			}
 	// 		})
 	// 		.catch((err) => {
@@ -27,7 +27,7 @@ class controller {
 	// 				req,
 	// 				res,
 	// 				500,
-	// 				'Fatal error finding admin documents in database.'
+	// 				'Fatal error finding admin documents in database'
 	// 			)
 	// 		})
 	// }
@@ -42,7 +42,7 @@ class controller {
 	// 				.find({ email: body.token })
 	// 				.then((result) => {
 	// 					if (result.length > 0)
-	// 						JSONResponse.error(req, res, 409, 'Admin already exists.')
+	// 						JSONResponse.error(req, res, 409, 'Admin already exists')
 	// 					else {
 	// 						let new_admin = new adminModel(body)
 	// 						new_admin
@@ -51,7 +51,7 @@ class controller {
 	// 								JSONResponse.success(req,
 	// 									res,
 	// 									201,
-	// 									'Admin created successfully.',
+	// 									'Admin created successfully',
 	// 									new_admin
 	// 								)
 	// 							})
@@ -59,7 +59,7 @@ class controller {
 	// 								JSONResponse.error(req,
 	// 									res,
 	// 									500,
-	// 									'Fatal error saving admin.'
+	// 									'Fatal error saving admin'
 	// 								)
 	// 							})
 	// 					}
@@ -68,13 +68,13 @@ class controller {
 	// 					JSONResponse.error(req,
 	// 						res,
 	// 						500,
-	// 						'Fatal error validating email.',
+	// 						'Fatal error validating email',
 	// 						err
 	// 					)
 	// 				})
 	// 		})
 	// 		.catch((err) => {
-	// 			JSONResponse.error(req, res, 500, 'Fatal error hashing password.', err)
+	// 			JSONResponse.error(req, res, 500, 'Fatal error hashing password', err)
 	// 		})
 	// }
 
@@ -94,7 +94,7 @@ class controller {
 									req,
 									res,
 									500,
-									'Fatal error comparing hash.',
+									'Fatal error comparing hash',
 									err
 								)
 							} else if (same) {
@@ -107,7 +107,7 @@ class controller {
 									},
 									'jwt_auth'
 								)
-								JSONResponse.success(req, res, 200, 'Successful login.')
+								JSONResponse.success(req, res, 200, 'Successful login')
 							} else {
 								JSONResponse.error(
 									req,
@@ -123,7 +123,7 @@ class controller {
 						req,
 						res,
 						404,
-						'Could not find specified admin.'
+						'Could not find specified admin'
 					)
 			})
 			.catch((err) => {
@@ -131,7 +131,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling admin model.',
+					'Fatal error handling admin model',
 					err
 				)
 			})
@@ -143,7 +143,7 @@ class controller {
 			adminModel
 				.findById(decoded.self)
 				.then((result) => {
-					JSONResponse.success(req, res, 200, 'Session resumed.', result)
+					JSONResponse.success(req, res, 200, 'Session resumed', result)
 				})
 				.catch((err) => {
 					JSONResponse.error(
@@ -167,7 +167,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling admin model.',
+					'Fatal error handling admin model',
 					err
 				)
 			} else if (result.length == 1) {
@@ -175,11 +175,11 @@ class controller {
 					req,
 					res,
 					200,
-					'Successfully updated admin.',
+					'Successfully updated admin',
 					result
 				)
 			} else {
-				JSONResponse.error(req, res, 404, 'Could not find specified admin.')
+				JSONResponse.error(req, res, 404, 'Could not find specified admin')
 			}
 		})
 	}
@@ -193,18 +193,13 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling admin model.',
+					'Fatal error handling admin model',
 					err
 				)
 			} else if (result) {
-				JSONResponse.success(
-					req,
-					res,
-					200,
-					'Successfully deleted an admin.'
-				)
+				JSONResponse.success(req, res, 200, 'Successfully deleted an admin')
 			} else {
-				JSONResponse.error(req, res, 404, 'Could not find admin.')
+				JSONResponse.error(req, res, 404, 'Could not find admin')
 			}
 		})
 	}

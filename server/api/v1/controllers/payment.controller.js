@@ -130,14 +130,14 @@ class controller {
 						req,
 						res,
 						200,
-						'Successfully removed payment method.'
+						'Successfully removed payment method'
 					)
 				} else {
 					JSONResponse.error(
 						req,
 						res,
 						404,
-						'Could not find payment method.'
+						'Could not find payment method'
 					)
 				}
 			})
@@ -146,7 +146,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling payment method model.',
+					'Fatal error handling payment method model',
 					err
 				)
 			})

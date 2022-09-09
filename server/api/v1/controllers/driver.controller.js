@@ -18,18 +18,17 @@ class controller {
 						req,
 						res,
 						200,
-						'Collected matching drivers.',
+						'Collected matching drivers',
 						results
 					)
-				else
-					JSONResponse.error(req, res, 404, 'Could not find any drivers.')
+				else JSONResponse.error(req, res, 404, 'Could not find any drivers')
 			})
 			.catch((err) => {
 				JSONResponse.error(
 					req,
 					res,
 					500,
-					'Fatal error handling driver model.',
+					'Fatal error handling driver model',
 					err
 				)
 			})
@@ -57,7 +56,7 @@ class controller {
 									req,
 									res,
 									500,
-									'Fatal error handing driver model.',
+									'Fatal error handing driver model',
 									err
 								)
 							})
@@ -85,7 +84,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error hashing password.',
+					'Fatal error hashing password',
 					err
 				)
 			}
@@ -108,7 +107,7 @@ class controller {
 									req,
 									res,
 									500,
-									'Fatal error comparing hash.',
+									'Fatal error comparing hash',
 									err
 								)
 							} else if (same) {
@@ -169,7 +168,7 @@ class controller {
 															req,
 															res,
 															200,
-															'Successful login.'
+															'Successful login'
 														)
 														respondCharter(req, res)
 													})
@@ -178,7 +177,7 @@ class controller {
 															req,
 															res,
 															500,
-															'Fatal handling workshiftlog model.',
+															'Fatal handling workshiftlog model',
 															err
 														)
 													})
@@ -189,24 +188,19 @@ class controller {
 												req,
 												res,
 												500,
-												'Fatal handling driver model.',
+												'Fatal handling driver model',
 												err
 											)
 										})
 								} else {
-									JSONResponse.error(
-										req,
-										res,
-										401,
-										'Email unverified.'
-									)
+									JSONResponse.error(req, res, 401, 'Email unverified')
 								}
 							} else {
 								JSONResponse.error(
 									req,
 									res,
 									401,
-									'Password does not match.'
+									'Password does not match'
 								)
 							}
 						}
@@ -216,7 +210,7 @@ class controller {
 						req,
 						res,
 						404,
-						'Could not find specified driver.'
+						'Account does not exist'
 					)
 			})
 			.catch((err) => {
@@ -224,7 +218,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling driver model.',
+					'Fatal error handling driver model',
 					err
 				)
 			})
@@ -267,7 +261,7 @@ class controller {
 								req,
 								res,
 								200,
-								'User verified successfully.'
+								'User verified successfully'
 							)
 						})
 						.catch((err) => {
@@ -275,7 +269,7 @@ class controller {
 								req,
 								res,
 								500,
-								'Fatal error handling user model.',
+								'Fatal error handling user model',
 								err
 							)
 						})
@@ -296,7 +290,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling driver model.',
+					'Fatal error handling driver model',
 					err
 				)
 			} else if (result.length == 1) {
@@ -304,16 +298,11 @@ class controller {
 					req,
 					res,
 					200,
-					'Successfully updated driver.',
+					'Successfully updated driver',
 					result
 				)
 			} else {
-				JSONResponse.error(
-					req,
-					res,
-					404,
-					'Could not find specified driver.'
-				)
+				JSONResponse.error(req, res, 404, 'Could not find specified driver')
 			}
 		})
 	}
@@ -327,7 +316,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling driver model.',
+					'Fatal error handling driver model',
 					err
 				)
 			} else if (result.length == 1) {
@@ -335,16 +324,11 @@ class controller {
 					req,
 					res,
 					200,
-					'Successfully updated driver.',
+					'Successfully updated driver',
 					result
 				)
 			} else {
-				JSONResponse.error(
-					req,
-					res,
-					404,
-					'Could not find specified driver.'
-				)
+				JSONResponse.error(req, res, 404, 'Could not find specified driver')
 			}
 		})
 	}
@@ -360,14 +344,14 @@ class controller {
 						req,
 						res,
 						200,
-						'Successfully deleted driver.'
+						'Successfully deleted driver'
 					)
 				} else {
 					JSONResponse.error(
 						req,
 						res,
 						404,
-						'Could not find specified driver.'
+						'Could not find specified driver'
 					)
 				}
 			})
@@ -376,7 +360,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling driver model.',
+					'Fatal error handling driver model',
 					err
 				)
 			})
@@ -392,14 +376,14 @@ class controller {
 						req,
 						res,
 						200,
-						'Successfully deleted driver.'
+						'Successfully deleted driver'
 					)
 				} else {
 					JSONResponse.error(
 						req,
 						res,
 						404,
-						'Could not find specified driver.'
+						'Could not find specified driver'
 					)
 				}
 			})
@@ -408,7 +392,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling driver model.',
+					'Fatal error handling driver model',
 					err
 				)
 			})

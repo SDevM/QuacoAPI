@@ -25,14 +25,14 @@ class controller {
 					new_report
 						.save()
 						.then((data) => {
-							JSONResponse.success(req, res, 201, 'Report placed.', data)
+							JSONResponse.success(req, res, 201, 'Report placed', data)
 						})
 						.catch((err) => {
 							JSONResponse.error(
 								req,
 								res,
 								500,
-								'Failed to place report.',
+								'Failed to place report',
 								err
 							)
 						})
@@ -52,7 +52,7 @@ class controller {
 					return
 				})
 		} else {
-			JSONResponse.error(req, res, 400, 'Bad request.')
+			JSONResponse.error(req, res, 400, 'Bad request')
 		}
 	}
 
@@ -82,7 +82,7 @@ class controller {
 								req,
 								res,
 								500,
-								'Could not collect all reports, this is a server issue.'
+								'Could not collect all reports, this is a server issue'
 							)
 						})
 				}
@@ -91,7 +91,7 @@ class controller {
 						req,
 						res,
 						200,
-						'Collected all related reports.',
+						'Collected all related reports',
 						buffer
 					)
 				})
@@ -109,7 +109,7 @@ class controller {
 					req,
 					res,
 					200,
-					'All reports collected.',
+					'All reports collected',
 					results
 				)
 			})
@@ -119,7 +119,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Failure handling report model.',
+					'Failure handling report model',
 					err
 				)
 			})
@@ -174,7 +174,7 @@ class controller {
 							req,
 							res,
 							200,
-							'Report closed successfully.'
+							'Report closed successfully'
 						)
 					})
 					.catch()
@@ -184,7 +184,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Fatal error handling report model.',
+					'Fatal error handling report model',
 					err
 				)
 			})
@@ -213,7 +213,7 @@ class controller {
 								req,
 								res,
 								200,
-								'Report response logged.',
+								'Report response logged',
 								result
 							)
 						})
@@ -235,7 +235,7 @@ class controller {
 					req,
 					res,
 					500,
-					'Failure handling report model.',
+					'Failure handling report model',
 					err
 				)
 			})

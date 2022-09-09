@@ -8,7 +8,7 @@ mongoose.connect(DBHOST + '/quaco', (err) => {
 		console.error(err)
 		process.exit(-1)
 	} else {
-		console.log('\tMongoDB succesfully connected...')
+		console.log('\tMongoDB succesfully connected..')
 	}
 })
 

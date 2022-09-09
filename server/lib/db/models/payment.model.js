@@ -18,7 +18,7 @@ let paymentSchema = new db.Schema({
 	},
 	expiry: {
 		type: String,
-		match: [/^((1[0-2])|(0[0-9]{0,1}))\/[\d]{2}$/gm, 'Invalid expiry date.'],
+		match: [/^((1[0-2])|(0[0-9]{0,1}))\/[\d]{2}$/gm, 'Invalid expiry date'],
 		required: [true, 'No expiry date provided'],
 	},
 })

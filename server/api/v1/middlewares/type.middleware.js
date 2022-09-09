@@ -24,7 +24,7 @@ const typeCheck = (types) => {
 				req,
 				res,
 				401,
-				'Access denied! Please log in, or access this route through the appropriate means.'
+				'Access denied! Please log in, or access this route through the appropriate means'
 			)
 		}
 	}
