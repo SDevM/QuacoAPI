@@ -20,6 +20,7 @@ class JWTHelper {
 		try {
 			decoded = jwt.verify(req.signedCookies[name], SESSION_SECRET, expire)
 		} catch (err) {
+			this.killToken(req, res, name)
 			console.error(err)
 			decoded = null
 		}

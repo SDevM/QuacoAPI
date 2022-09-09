@@ -117,7 +117,7 @@ class controller {
 
 	static session(req, res) {
 		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
-		if (decoded.type == 1)
+		if (decoded && decoded.type == 1)
 			userModel
 				.findById(decoded.self)
 				.then((result) => {

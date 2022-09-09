@@ -226,7 +226,7 @@ class controller {
 
 	static session(req, res) {
 		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
-		if (decoded.type == 0)
+		if (decoded && decoded.type == 0)
 			driverModel
 				.findById(decoded.self)
 				.then((result) => {
