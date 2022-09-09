@@ -5,4 +5,5 @@ let workshiftSchema = new db.Schema({
 	time_end: { type: Number, required: true },
 })
 
-module.exports = db.model('shifts', workshiftSchema)
+const workshiftModel = db.model('shifts', workshiftSchema)
+module.exports = workshiftModel

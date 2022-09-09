@@ -5,4 +5,5 @@ let priceSchema = new db.Schema({
 	rate: { type: Number, required: true },
 })
 
-module.exports = db.model('pricing', priceSchema)
+const priceModel = db.model('pricing', priceSchema)
+module.exports = priceModel

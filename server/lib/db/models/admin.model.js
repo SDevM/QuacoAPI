@@ -30,4 +30,5 @@ let adminSchema = new db.Schema({
 	},
 })
 
-module.exports = db.model('admins', adminSchema)
+const adminModel = db.model('admins', adminSchema)
+module.exports = adminModel

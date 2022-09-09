@@ -78,4 +78,5 @@ driverSchema.pre('findByIdAndUpdate', async function (next, opts) {
 	}
 })
 
-module.exports = db.model('drivers', driverSchema)
+const driverModel = db.model('charters', driverSchema)
+module.exports = driverModel

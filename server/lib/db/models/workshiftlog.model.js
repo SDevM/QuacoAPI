@@ -6,4 +6,5 @@ let workshiftlogSchema = new db.Schema({
 	time_end: { type: Number },
 })
 
-module.exports = db.model('shiftlogs', workshiftlogSchema)
+const worklogModel = db.model('shiftlogs', workshiftlogSchema)
+module.exports = worklogModel

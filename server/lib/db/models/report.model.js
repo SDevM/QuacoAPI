@@ -26,4 +26,5 @@ let reportsSchema = new db.Schema({
 	open: { type: Boolean, required: [true, 'No open state provided'] },
 })
 
-module.exports = db.model('reports', reportsSchema)
+const reportModel = db.model('reports', reportsSchema)
+module.exports = reportModel

@@ -77,4 +77,5 @@ userSchema.methods.SignIn = function (password) {
 	})
 }
 
-module.exports = db.model('users', userSchema)
+const userModel = db.model('users', userSchema)
+module.exports = userModel

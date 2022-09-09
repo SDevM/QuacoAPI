@@ -6,12 +6,12 @@ const reportController = require('./controllers/report.controller')
 const paymentController = require('./controllers/payment.controller')
 const typeCheck = require('./middlewares/type.middleware')
 const JSONResponse = require('../../lib/json.helper')
-const titlesModel = require('../../lib/db/models/title.model')
 const musicModel = require('../../lib/db/models/music.model')
 const languagesModel = require('../../lib/db/models/language.model')
 const JWTHelper = require('../../lib/jwt.helper')
 const router = require('express').Router()
 const multer = require('multer')
+const activeCheck = require('./middlewares/active.middleware')
 const upload = multer()
 
 router.get('', (req, res) => {
@@ -87,8 +87,8 @@ router
 	.delete(typeCheck(['user']), charterController.deleteCharter)
 router
 	.route('/charters')
-	.post(typeCheck(['user']), charterController.createCharter)
-	.patch(typeCheck(['driver']), charterController.respondCharter)
+	.post(typeCheck(['user']), activeCheck, charterController.createCharter)
+	.patch(typeCheck(['driver']), activeCheck, charterController.respondCharter)
 
 router
 	.route('/reports/all')
@@ -100,7 +100,11 @@ router
 router
 	.route('/reports')
 	.get(typeCheck(['user', 'driver']), reportController.getReports)
-	.post(typeCheck(['user', 'driver']), reportController.openReport)
+	.post(
+		typeCheck(['user', 'driver']),
+		activeCheck,
+		reportController.openReport
+	)
 
 router
 	.route('/payments/all')
@@ -111,18 +115,8 @@ router
 router
 	.route('/payments')
 	.get(typeCheck(['user']), paymentController.get)
-	.post(typeCheck(['user']), paymentController.addPaymentMethod)
+	.post(typeCheck(['user']), activeCheck, paymentController.addPaymentMethod)
 
-router.route('/titles').get((req, res) => {
-	titlesModel
-		.find()
-		.then((results) => {
-			JSONResponse.success(req, res, 200, 'Collected titles', results)
-		})
-		.catch((err) => {
-			JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
-		})
-})
 router.route('/music').get((req, res) => {
 	musicModel
 		.find()

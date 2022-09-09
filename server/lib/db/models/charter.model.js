@@ -41,4 +41,5 @@ charterSchema.pre('save', async function (next, opts) {
 	}
 })
 
-module.exports = db.model('charters', charterSchema)
+const charterModel = db.model('charters', charterSchema)
+module.exports = charterModel

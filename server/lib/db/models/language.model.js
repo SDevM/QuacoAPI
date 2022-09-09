@@ -4,4 +4,5 @@ let languagesSchema = new db.Schema({
 	language: { type: String, required: true },
 })
 
-module.exports = db.model('languages', languagesSchema)
+const languageModel = db.model('charters', languagesSchema)
+module.exports = languageModel

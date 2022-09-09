@@ -4,4 +4,5 @@ let musicSchema = new db.Schema({
 	music: { type: String, required: true },
 })
 
-module.exports = db.model('music', musicSchema)
+const musicModel = db.model('music', musicSchema)
+module.exports = musicModel

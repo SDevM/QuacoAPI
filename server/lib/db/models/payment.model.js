@@ -35,4 +35,5 @@ paymentSchema.methods.checkDupe = function () {
 	})
 }
 
-module.exports = db.model('payments', paymentSchema)
+const paymentModel = db.model('payments', paymentSchema)
+module.exports = paymentModel

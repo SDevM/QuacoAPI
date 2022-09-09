@@ -73,10 +73,6 @@ class controller {
 			.findOne({ email: body.email })
 			.then(async (result) => {
 				if (result) {
-					if (!result.active) {
-						JSONResponse.error(req, res, 401, 'Email unverified')
-						return
-					}
 					const login = await result.SignIn(body.password).catch((err) => {
 						JSONResponse.error(
 							req,
