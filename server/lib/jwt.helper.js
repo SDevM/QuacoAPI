@@ -7,7 +7,8 @@ class JWTHelper {
 		return jwt.sign(payload, SESSION_SECRET, { expiresIn: expire })
 	}
 	static setToken(req, res, payload, name, expire = '1d') {
-		res.cookie(name, this.genToken(payload, expire), {
+		const token = this.genToken(payload, expire)
+		res.cookie(name, token, {
 			expiresIn: expire,
 			httpOnly: true,
 			secure: true,
@@ -15,10 +16,10 @@ class JWTHelper {
 			sameSite: 'none',
 		})
 	}
-	static getToken(req, res, name, expire = '1d') {
+	static getToken(req, res, name) {
 		let decoded
 		try {
-			decoded = jwt.verify(req.signedCookies[name], SESSION_SECRET, expire)
+			decoded = jwt.verify(req.signedCookies[name], SESSION_SECRET)
 		} catch (err) {
 			this.killToken(req, res, name)
 			console.error(err)
