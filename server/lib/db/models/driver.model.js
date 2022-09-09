@@ -3,11 +3,6 @@ const S3Helper = require('../../s3.helper.js')
 const db = require('../db.js')
 
 let driverSchema = new db.Schema({
-	title: {
-		type: db.Types.ObjectId,
-		required: [true, 'No title provided'],
-		ref: 'titles',
-	},
 	name: { type: String, required: [true, 'No name provided'] },
 	username: { type: String, required: [true, 'No username provided'] },
 	email: {
