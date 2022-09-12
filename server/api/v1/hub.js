@@ -121,7 +121,7 @@ router.route('/music').get((req, res) => {
 	musicModel
 		.find()
 		.then((results) => {
-			JSONResponse.success(req, res, 200, 'Collected titles', results)
+			JSONResponse.success(req, res, 200, 'Collected music', results)
 		})
 		.catch((err) => {
 			JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
@@ -131,7 +131,7 @@ router.route('/languages').get((req, res) => {
 	languagesModel
 		.find()
 		.then((results) => {
-			JSONResponse.success(req, res, 200, 'Collected titles', results)
+			JSONResponse.success(req, res, 200, 'Collected languages', results)
 		})
 		.catch((err) => {
 			JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
