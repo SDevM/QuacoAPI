@@ -1,11 +1,6 @@
 const db = require('../db.js')
 
 let adminSchema = new db.Schema({
-	title: {
-		type: db.Types.ObjectId,
-		required: [true, 'No title provided'],
-		ref: 'titles',
-	},
 	name: { type: String, required: [true, 'No name provided'] },
 	admin: { type: String, required: [true, 'No admin name provided'] },
 	token: { type: String, required: [true, 'No token provided'] },
