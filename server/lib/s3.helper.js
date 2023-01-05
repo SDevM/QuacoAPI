@@ -1,20 +1,19 @@
 require('dotenv').config()
-const { AWS_BUCKET_REGION, AWS_ACCESS_ID, AWS_ACCESS_KEY, AWS_BUCKET } =
-	process.env
+const { BUCKET_REGION, ACCESS_ID, ACCESS_KEY, BUCKET } = process.env
 const S3 = require('aws-sdk/clients/s3')
 const { bufferToStream } = require('./converters.helper')
 const s3 = new S3({
-	region: AWS_BUCKET_REGION,
+	region: BUCKET_REGION,
 	credentials: {
-		accessKeyId: AWS_ACCESS_ID,
-		secretAccessKey: AWS_ACCESS_KEY,
+		accessKeyId: ACCESS_ID,
+		secretAccessKey: ACCESS_KEY,
 	},
 })
 
 class S3Helper {
 	static upload(file, name) {
 		const uploadConf = {
-			Bucket: AWS_BUCKET,
+			Bucket: BUCKET,
 			Body: bufferToStream(file.buffer),
 			Key: name,
 		}
@@ -34,7 +33,7 @@ class S3Helper {
 
 	static delete(name) {
 		const deleteConf = {
-			Bucket: AWS_BUCKET,
+			Bucket: BUCKET,
 			Key: name,
 		}
 
@@ -53,7 +52,7 @@ class S3Helper {
 
 	static download(name) {
 		const downConf = {
-			Bucket: AWS_BUCKET,
+			Bucket: BUCKET,
 			Key: name,
 		}
 
