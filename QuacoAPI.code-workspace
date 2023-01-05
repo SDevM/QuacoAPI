@@ -1,0 +1,12 @@
+{
+    "folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Quaco",
+			"path": "../../Angular Fronts/Quaco"
+		}
+	],
+    "settings": {}
+}
